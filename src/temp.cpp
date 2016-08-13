@@ -1,16 +1,38 @@
 /*
+https://www.codewars.com/kata/simple-encryption-number-1-alternating-split
 
+For building the encrypted string:
+Take every 2nd char from the string. Then the other chars.
+Do this n times!
+
+Examples:
+
+"This is a test!", 1 -> "hsi  etTi sats!"
+"This is a test!", 2 -> "hsi  etTi sats!" -> "s eT ashi tist!"
+Write two methods:
+
+std::string encrypt(std::string text, int n)
+std::string decrypt(std::string encryptedText, int n)
+For both methods:
+If the input-string is null or empty return exactly this value!
+If n is <= 0 then return the input text.
+
+Have fun coding it and please don't forget to vote and rank this kata! :-)
 */
 
 #include <algorithm>
 #include <cassert>
 #include <chrono>
 #include <cmath>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
 #include <ctime>
 #include <functional>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
+#include <map>
 #include <random>
 #include <set>
 #include <sstream>
@@ -19,60 +41,48 @@
 
 using namespace std;
 
-class Solution {
- public:
-  static string subsol_01(int input) { return to_string(input); };
-};
-
-class TestCase {
- public:
-  int input;
-  string expected;
-  TestCase(const int input_, const string &expected_)
-      : input(input_), expected(expected_) {
-    // Constructor
+int nloops(int l) {
+  int l_h = l / 2, n = 1, p = l_h;
+  while (p > 0) {
+    p = (p % 2) ? (p >> 1) : ((p >> 1) + l_h);
+    ++n;
   }
-};
-
-const vector<TestCase> set_gen(const function<string(int)> &subsol) {
-  vector<TestCase> testcases;
-  srand(time(0));
-  for (int i = 0; i < 100; i++) {
-    int input = rand() % 100;
-    string expected = subsol(input);
-    testcases.push_back(TestCase(input, expected));
-  }
-  return testcases;
+  return n;
+}
+string encrypt(const string &text, int n) {
+  int l = text.size(), n_ = nloops(l);
+  n %= n_;
+  if (l < 2 || n < 1) return text;
+  string str;
+  for (int i = 1; i < l; i += 2) str += text[i];
+  for (int i = 0; i < l; i += 2) str += text[i];
+  return encrypt(str, n - 1);
+}
+string decrypt(const string &text, int n) {
+  int l = text.size(), n_ = nloops(l);
+  n %= n_;
+  if (l < 2 || n < 1) return text;
+  return encrypt(text, n_ - n);
 }
 
-void test(const function<string(int)> &subsol,
-          const vector<TestCase> &testcases) {
-  for (int i = 0; i < testcases.size(); i++) {
-    const TestCase &testcase = testcases[i];
-    assert(subsol(testcase.input) == testcase.expected);
+string generateRandomString(int l) {
+  string randomString;
+  for (int i = 0, c = 65; i < l; i++, c++) {
+    randomString.append(1, c);
   }
+  return randomString;
 }
 
-unsigned long test_spd(const function<string(int)> &subsol,
-                       const vector<TestCase> &testcases,
-                       unsigned int n_ = 1000) {
-  using namespace chrono;
-  unsigned long elapsed = 0;
-  for (int i = 0; i < testcases.size(); i++) {
-    const TestCase &testcase = testcases[i];
-    unsigned int n = n_;
-    high_resolution_clock::time_point t1 = high_resolution_clock::now();
-    while (n--) subsol(testcase.input);
-    high_resolution_clock::time_point t2 = high_resolution_clock::now();
-    elapsed += duration_cast<microseconds>(t2 - t1).count();
+void test(const function<string(string, int)> &encrypt) {
+  for (int i = 2; i < 101; i += 2) {
+    string text = generateRandomString(i);
+    int n = 1;
+    while (encrypt(text, n) != text) ++n;
+    cout << text.size() << " | " << n << " | " << nloops(text.size()) << endl;
   }
-  return elapsed;
 }
 
 int main() {
-  Solution sol;
-  const vector<TestCase> &testcases = set_gen(sol.subsol_01);
-  test(sol.subsol_01, testcases);
-  cout << "subsol_01:\t" << test_spd(sol.subsol_01, testcases) << "ms" << endl;
+  test(encrypt);
   return 0;
 }
