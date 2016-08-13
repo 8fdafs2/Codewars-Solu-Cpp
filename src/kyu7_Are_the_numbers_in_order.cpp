@@ -115,7 +115,7 @@ unsigned long test_spd(const function<bool(vector<int>)> &isAscOrder,
     while (n--) isAscOrder(testcase.arr);
     chrono::high_resolution_clock::time_point t2 =
         chrono::high_resolution_clock::now();
-    elapsed += chrono::duration_cast<chrono::microseconds>(t2 - t1).count();
+    elapsed += chrono::duration_cast<chrono::milliseconds>(t2 - t1).count();
   }
   return elapsed;
 }

@@ -118,7 +118,7 @@ unsigned long test_spd(const function<int(vector<int>)> &sum,
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     while (n--) sum(testcase.numbers);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
-    elapsed += duration_cast<microseconds>(t2 - t1).count();
+    elapsed += duration_cast<milliseconds>(t2 - t1).count();
   }
   return elapsed;
 }
