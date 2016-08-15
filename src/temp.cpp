@@ -1,27 +1,54 @@
-#include <cmath>
-#include <iomanip>
-#include <sstream>
-#include <string>
-
-#define M_PI 3.14159265358979323846 /* pi */
+#include <vector>
 
 using namespace std;
 
-class PiApprox {
+class RemovedNumbers {
  public:
-  static string iterPi(double epsilon);
+  static vector<vector<long long>> removNb(long long n);
 };
 
-string PiApprox::iterPi(double epsilon) {
-  ostringstream ss;
-  double pi = 0;
-  int n = 1;
-  double sign = 1.0;
-  while (abs(4 * pi - M_PI) >= epsilon) {
-    pi += sign / n;
-    n += 2;
-    sign = -sign;
+vector<vector<long long>> RemovedNumbers::removNb(long long n) {
+  long long sum{(1 + n) * n / 2};
+  vector<vector<long long>> ret;
+  long long i = 1;
+  while (i < n) {
+    --sum;
+    long long x = i * (i + 1);
+    long long j = i + 1;
+    while (j <= n) {
+      // cout << i << " | " << j << endl;
+      if (sum - j == x) {
+        ret.push_back({i, j});
+        ret.push_back({j, i});
+        break;
+      }
+      if (sum - i < x) break;
+      ++j;
+      x += i;
+    }
+    ++i;
   }
-  ss << "[" << (n - 1) / 2 << ", " << setprecision(11) << 4 * pi << "]";
-  return ss.str();
+  return ret;
+}
+
+vector<vector<long long>> RemovedNumbers::removNb(long long n) {
+  long long a{(((1 + n) * n) >> 1) - 2};
+  vector<vector<long long>> ret;
+  long long b{3};
+  while (b < n + 1) {
+    // cout << a << '/' << b << endl;
+    if (a < b) break;
+    if (a % b != 0) {
+      ++b;
+      --a;
+      continue;
+    }
+    if (b * n >= a) {
+      ret.push_back({b - 1, a / b});
+      // ret.push_back({a / b, b - 1});
+    }
+    ++b;
+    --a;
+  }
+  return ret;
 }
