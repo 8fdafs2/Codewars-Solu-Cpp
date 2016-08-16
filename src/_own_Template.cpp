@@ -18,6 +18,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "common.cpp"
 
 using namespace std;
 
@@ -30,7 +31,7 @@ class TestCase {
  public:
   int input;
   string expected;
-  TestCase(const int input_, const string &expected_)
+  TestCase(int input_, const string &expected_)
       : input(input_), expected(expected_) {
     // Constructor
   }
@@ -38,9 +39,9 @@ class TestCase {
 
 const vector<TestCase> set_gen(const function<string(int)> &subsol) {
   vector<TestCase> testcases;
-  srand(time(0));
+  uniform_int_distribution<int> uni1(0, 100);
   for (int i = 0; i < 100; i++) {
-    int input = rand() % 100;
+    int input = uni1(gen);
     string expected = subsol(input);
     testcases.push_back(TestCase(input, expected));
   }
@@ -51,7 +52,15 @@ void test(const function<string(int)> &subsol,
           const vector<TestCase> &testcases) {
   for (int i = 0; i < testcases.size(); i++) {
     const TestCase &testcase = testcases[i];
+    const string &actual = subsol(testcase.input);
     assert(subsol(testcase.input) == testcase.expected);
+    try {
+      Assert<Wrong>(actual == testcase.expected);
+    } catch (Wrong &e) {
+      cout << "\t!!Assertion Failed!!" << endl;
+      cout << "\tin: " << testcase.input << endl;
+      cout << "\tout:" << actual << " vs. " << testcase.expected << endl;
+    }
   }
 }
 
@@ -74,7 +83,9 @@ unsigned long test_spd(const function<string(int)> &subsol,
 int main() {
   Solution sol;
   const vector<TestCase> &testcases = set_gen(sol.subsol_01);
-  test(sol.subsol_01, testcases);
+  cout << "test..." << endl;
+  cout << "subsol_01" << endl, test(sol.subsol_01, testcases);
+  cout << "test_spd..." << endl;
   cout << "subsol_01:\t" << test_spd(sol.subsol_01, testcases) << "ms" << endl;
   return 0;
 }

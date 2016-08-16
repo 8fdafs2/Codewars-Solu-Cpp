@@ -9,6 +9,10 @@ using namespace std;
 
 // ---------------------------------------------
 
+class Wrong {};
+
+// ---------------------------------------------
+
 char rand_char(const string &set);
 
 string rand_string(size_t length, bool has_digits = true,
@@ -18,11 +22,14 @@ string rand_string(size_t length, const string &set);
 
 bool rand_bool();
 
-template <class T>
+template <typename T>
 T choice(vector<T> vec);
 
-template <class T, size_t N>
+template <typename T, size_t N>
 T choice(T (&arr)[N]);
+
+template <typename X, typename A>
+inline void Assert(A assertion);
 
 // ---------------------------------------------
 
@@ -57,16 +64,21 @@ bool rand_bool() {
   return bool(uni(gen));
 }
 
-template <class T>
+template <typename T>
 T choice(vector<T> vec) {
   uniform_int_distribution<int> uni(0, vec.size() - 1);
   return vec[uni(gen)];
 }
 
-template <class T, size_t N>
+template <typename T, size_t N>
 T choice(T (&arr)[N]) {
   uniform_int_distribution<int> uni(0, N - 1);
   return arr[uni(gen)];
+}
+
+template <typename X, typename A>
+inline void Assert(A assertion) {
+  if (!assertion) throw X();
 }
 
 // int main() {

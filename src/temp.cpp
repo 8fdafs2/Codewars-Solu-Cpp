@@ -1,21 +1,20 @@
-#include <algorithm>
-#include <cstddef>
-#include <cstdlib>
-#include <iostream>
-#include <iterator>
-#include <string>
-
 using namespace std;
 
-int main() {
-  const std::size_t N = 5;
-  int ar[N];
-  std::generate_n(ar, N, std::rand);  // Using the C function rand()
+class Arge {
+ public:
+  static int nbYear(int p0, double percent, int aug, int p);
+};
 
-  char str[5];
-  generate_n(str, 5, '1');
-
-  std::cout << "ar: ";
-  std::copy(ar, ar + N, std::ostream_iterator<int>(std::cout, " "));
-  std::cout << "\n";
+int Arge::nbYear(int p0, double percent, int aug, int p) {
+  if (p0 >= p) return 0;
+  percent = (100 + percent) / 100;
+  int pc = (p0 * percent + aug);
+  double inc = (percent * (percent * p0 + aug - p0));
+  int ret{1};
+  while (pc < p) {
+    pc += inc;
+    inc *= percent;
+    ++ret;
+  }
+  return ret;
 }
