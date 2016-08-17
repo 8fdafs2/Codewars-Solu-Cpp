@@ -1,2 +1,2 @@
-# Codewars-Sol-Cpp
+# Codewars-Solu-Cpp
 C++ Solutions on Codewars
