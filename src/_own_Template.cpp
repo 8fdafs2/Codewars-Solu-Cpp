@@ -53,7 +53,6 @@ void test(const function<string(int)> &subsol,
   for (int i = 0; i < testcases.size(); ++i) {
     const TestCase &testcase = testcases[i];
     const string &actual = subsol(testcase.input);
-    assert(actual == testcase.expected);
     try {
       Assert<Wrong>(actual == testcase.expected);
     } catch (Wrong &e) {
