@@ -1,26 +1,24 @@
-#include <iostream>
-#include <map>
-#include <string>
+#include <algorithm>
 #include <vector>
 
 using namespace std;
 
-string vowelShift(const string &text, int n) {
-  string ret(text);
-  int l = text.size();
-  if (l < 2 || n == 0) return ret;
-  const string vowels{"aAeEiIoOuU"};
-  vector<pair<int, char>> tab;
-  for (int i = 0; i < l; ++i)
-    if (vowels.find(text[i]) != string::npos) tab.push_back({i, text[i]});
-  l = tab.size();
-  while (n < 0) n += l;
-  for (int i = 0; i < l; ++i) ret[tab[(i + n) % l].first] = tab[i].second;
-  return ret;
-}
+class SqProd2Sum {
+ public:
+  static vector<pair<long, long>> prod2Sum(long long a, long long b,
+                                           long long c, long long d);
+};
 
-int main() {
-  cout << vowelShift("This is a test!", 1) << endl;
-
-  return 0;
+vector<pair<long, long>> SqProd2Sum::prod2Sum(long long a, long long b,
+                                              long long c, long long d) {
+  long ac{a * c}, bd{b * d}, ad{a * d}, bc{b * c};
+  long e1 = abs(ac + bd);
+  long f1 = abs(ad - bc);
+  long e2 = abs(ac - bd);
+  long f2 = abs(ad + bc);
+  if (e1 > f1) swap(e1, f1);
+  if (e2 > f2) swap(e2, f2);
+  if (e1 == e2) return {{e1, f1}};
+  if (e1 < e2) return {{e1, f1}, {e2, f2}};
+  return {{e2, f2}, {e1, f1}};
 }
