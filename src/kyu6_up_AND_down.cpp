@@ -97,46 +97,81 @@ class Solution {
     }
     return ss.str();
   };
+  static string arrange_02(const string &s) {
+    if (s.empty()) return s;
+    stringstream ss(s);
+    string str;
+    vector<string> elems;
+    while (ss >> str) elems.push_back(str);
+    for (int i = 0; i < elems.size() - 1; ++i) {
+      if (i % 2 == 0) {
+        if (elems[i].size() > elems[i + 1].size()) swap(elems[i], elems[i + 1]);
+      } else {
+        if (elems[i].size() < elems[i + 1].size()) swap(elems[i], elems[i + 1]);
+      }
+    }
+    for (int i = 0; i < elems.size(); ++i)
+      if (i % 2)
+        for (auto &c : elems[i]) c = toupper(c);
+      else
+        for (auto &c : elems[i]) c = tolower(c);
+    str = "";
+    for (auto &s : elems) str += s + ' ';
+    return str.substr(0, str.size() - 1);
+  };
 };
 
 class TestCase {
  public:
-  int input;
+  string s;
   string expected;
-  TestCase(int input_, const string &expected_)
-      : input(input_), expected(expected_) {
+  TestCase(const string &s_, const string &expected_)
+      : s(s_), expected(expected_) {
     // Constructor
   }
 };
 
-const vector<TestCase> set_gen(const function<string(int)> &subsol) {
+const vector<TestCase> set_gen(
+    const function<string(const string &)> &arrange) {
   vector<TestCase> testcases;
-  uniform_int_distribution<int> uni1(0, 100);
-  for (int i = 0; i < 100; i++) {
-    int input = uni1(gen);
-    string expected = subsol(input);
-    testcases.push_back(TestCase(input, expected));
+  uniform_int_distribution<int> uni1(100, 1000);
+  string set = "aAbBcCdDeEfF";
+  for (int i = 0; i < 100; ++i) {
+    int l = uni1(gen);
+    string s = rand_string(l, set);
+    int n_punch = l / 5;
+    uniform_int_distribution<int> uni2(1, l - 2);
+    while (n_punch) {
+      int p = uni2(gen);
+      if (s[p] != ' ' && s[p - 1] != ' ' && s[p + 1] != ' ') {
+        s[p] = ' ';
+        --n_punch;
+      };
+    }
+    cout << s << endl;
+    const string &expected = arrange(s);
+    testcases.push_back(TestCase(s, expected));
   }
   return testcases;
 }
 
-void test(const function<string(int)> &subsol,
+void test(const function<string(const string &)> &arrange,
           const vector<TestCase> &testcases) {
   for (int i = 0; i < testcases.size(); i++) {
     const TestCase &testcase = testcases[i];
-    const string &actual = subsol(testcase.input);
-    assert(subsol(testcase.input) == testcase.expected);
+    const string &actual = arrange(testcase.s);
+    assert(actual == testcase.expected);
     try {
       Assert<Wrong>(actual == testcase.expected);
     } catch (Wrong &e) {
       cout << "\t!!Assertion Failed!!" << endl;
-      cout << "\tin: " << testcase.input << endl;
+      cout << "\tin: " << testcase.s << endl;
       cout << "\tout:" << actual << " vs. " << testcase.expected << endl;
     }
   }
 }
 
-unsigned long test_spd(const function<string(int)> &subsol,
+unsigned long test_spd(const function<string(const string &)> &arrange,
                        const vector<TestCase> &testcases,
                        unsigned int n_ = 1000) {
   using namespace chrono;
@@ -145,7 +180,7 @@ unsigned long test_spd(const function<string(int)> &subsol,
     const TestCase &testcase = testcases[i];
     unsigned int n = n_;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
-    while (n--) subsol(testcase.input);
+    while (n--) arrange(testcase.s);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     elapsed += duration_cast<milliseconds>(t2 - t1).count();
   }
@@ -154,10 +189,14 @@ unsigned long test_spd(const function<string(int)> &subsol,
 
 int main() {
   Solution sol;
-  const vector<TestCase> &testcases = set_gen(sol.subsol_01);
+  const vector<TestCase> &testcases = set_gen(sol.arrange_01);
   cout << "test..." << endl;
-  cout << "subsol_01" << endl, test(sol.subsol_01, testcases);
+  cout << "arrange_01" << endl, test(sol.arrange_01, testcases);
+  cout << "arrange_02" << endl, test(sol.arrange_02, testcases);
   cout << "test_spd..." << endl;
-  cout << "subsol_01:\t" << test_spd(sol.subsol_01, testcases) << "ms" << endl;
+  cout << "arrange_01:\t" << test_spd(sol.arrange_01, testcases) << "ms"
+       << endl;
+  cout << "arrange_02:\t" << test_spd(sol.arrange_02, testcases) << "ms"
+       << endl;
   return 0;
 }

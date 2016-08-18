@@ -40,7 +40,7 @@ class TestCase {
 const vector<TestCase> set_gen(const function<string(int)> &subsol) {
   vector<TestCase> testcases;
   uniform_int_distribution<int> uni1(0, 100);
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 100; ++i) {
     int input = uni1(gen);
     string expected = subsol(input);
     testcases.push_back(TestCase(input, expected));
@@ -50,10 +50,10 @@ const vector<TestCase> set_gen(const function<string(int)> &subsol) {
 
 void test(const function<string(int)> &subsol,
           const vector<TestCase> &testcases) {
-  for (int i = 0; i < testcases.size(); i++) {
+  for (int i = 0; i < testcases.size(); ++i) {
     const TestCase &testcase = testcases[i];
     const string &actual = subsol(testcase.input);
-    assert(subsol(testcase.input) == testcase.expected);
+    assert(actual == testcase.expected);
     try {
       Assert<Wrong>(actual == testcase.expected);
     } catch (Wrong &e) {
@@ -69,7 +69,7 @@ unsigned long test_spd(const function<string(int)> &subsol,
                        unsigned int n_ = 1000) {
   using namespace chrono;
   unsigned long elapsed = 0;
-  for (int i = 0; i < testcases.size(); i++) {
+  for (int i = 0; i < testcases.size(); ++i) {
     const TestCase &testcase = testcases[i];
     unsigned int n = n_;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
