@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -28,8 +29,13 @@ T choice(vector<T> vec);
 template <typename T, size_t N>
 T choice(T (&arr)[N]);
 
-template <typename X, typename A>
+template <typename T, typename A>
 inline void Assert(A assertion);
+
+vector<string> split(const string &s, char delim);
+
+template <typename T>
+string vtos(const vector<T> &vec);
 
 // ---------------------------------------------
 
@@ -76,9 +82,28 @@ T choice(T (&arr)[N]) {
   return arr[uni(gen)];
 }
 
-template <typename X, typename A>
+template <typename T, typename A>
 inline void Assert(A assertion) {
-  if (!assertion) throw X();
+  if (!assertion) throw T();
+}
+
+vector<string> split(const string &s, char delim) {
+  vector<string> out;
+  istringstream ss(s);
+  string next;
+  while (getline(ss, next, delim)) out.push_back(next);
+  return out;
+}
+
+template <typename T>
+string vtos(const vector<T> &vec) {
+  if (vec.empty) return "{}";
+  ostringstream oss;
+  // Convert all but the last element to avoid a trailing ","
+  copy(vec.begin(), vec.end() - 1, ostream_iterator<int>(oss, ","));
+  // Now add the last element with no delimiter
+  oss << vec.back();
+  return oss.str();
 }
 
 // int main() {
