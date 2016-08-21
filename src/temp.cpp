@@ -1,53 +1,50 @@
-#include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class Rainfall {
+class ToSmallest {
  public:
-  static vector<double> datget(const string &town, const string &strng);
-  static double mean(const string &town, const string &strng);
-  static double variance(const string &town, const string &strng);
+  static vector<long long> smallest(long long n);
 };
 
-vector<double> Rainfall::datget(const string &town, const string &strng) {
-  size_t pos_s = strng.find(town + ':');
-  vector<double> dat;
-  if (pos_s == string::npos) return dat;
-  pos_s += town.size() + 1;
-  size_t pos_e = strng.find('\n', pos_s);
-  if (pos_e == string::npos) pos_e = strng.size();
-  size_t pos_d;
-  while (1) {
-    pos_d = strng.find(' ', pos_s + 1);
-    pos_s = strng.find(',', pos_d + 1);
-    if (pos_s > pos_e) {
-      dat.push_back(stod(strng.substr(pos_d + 1, pos_e - pos_d - 1)));
-      break;
+vector<long long> ToSmallest::smallest(long long n) {
+  cout << n << endl;
+  string s = to_string(n), tmp = s;
+  vector<long long> mem = {-1, -1, -1};
+  unsigned int l = s.length();
+  for (unsigned int i = 0; i < l; i++) {
+    char c = s[i];
+    string str1 = s.substr(0, i) + s.substr(i + 1, l - (i + 1));
+    cout << "\tstr1: " << str1 << endl;
+    for (unsigned int j = 0; j < l; j++) {
+      string str2 = str1.substr(0, j) + c + str1.substr(j, str1.length() - j);
+      cout << "\t\tstr2: " << str2 << endl;
+      if (str2 < tmp) {
+        tmp = str2;
+        mem[0] = stoll(tmp);
+        mem[1] = i;
+        mem[2] = j;
+      }
     }
-    dat.push_back(stod(strng.substr(pos_d + 1, pos_s - pos_d - 1)));
   }
-  return dat;
+  if (mem[0] == -1) {
+    mem[0] = n;
+    mem[1] = 0;
+    mem[2] = 0;
+  }
+  return mem;
 }
 
-double Rainfall::mean(const string &town, const string &strng) {
-  const vector<double> &dat = datget(town, strng);
-  if (dat.empty()) return -1;
-  size_t l = dat.size();
-  double sum{0};
-  for (size_t i = 0; i < l; ++i) sum += dat[i];
-  return sum / l;
-}
-double Rainfall::variance(const string &town, const string &strng) {
-  const vector<double> &dat = datget(town, strng);
-  if (dat.empty()) return -1;
-  size_t l = dat.size();
-  double sum{0};
-  for (size_t i = 0; i < l; ++i) sum += dat[i];
-  double mea = sum / l;
-  sum = 0;
-  for (size_t i = 0; i < l; ++i) sum += pow(dat[i] - mea, 2);
-  return sum / l;
+int main() {
+  ToSmallest ts;
+  vector<long long> seq{
+      1348787, 1015920,
+  };
+  for (auto n : seq) {
+    vector<long long> ret = ts.smallest(n);
+    cout << ret[0] << '|' << ret[1] << '|' << ret[2] << endl;
+  }
+  return 0;
 }

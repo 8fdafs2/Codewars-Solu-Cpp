@@ -24,10 +24,10 @@ string rand_string(size_t length, const string &set);
 bool rand_bool();
 
 template <typename T>
-T choice(vector<T> vec);
+T choice(const vector<T> &vec);
 
 template <typename T, size_t N>
-T choice(T (&arr)[N]);
+T choice(const T (&arr)[N]);
 
 template <typename T, typename A>
 inline void Assert(A assertion);
@@ -71,13 +71,13 @@ bool rand_bool() {
 }
 
 template <typename T>
-T choice(vector<T> vec) {
+T choice(const vector<T> &vec) {
   uniform_int_distribution<int> uni(0, vec.size() - 1);
   return vec[uni(gen)];
 }
 
 template <typename T, size_t N>
-T choice(T (&arr)[N]) {
+T choice(const T (&arr)[N]) {
   uniform_int_distribution<int> uni(0, N - 1);
   return arr[uni(gen)];
 }
@@ -97,13 +97,26 @@ vector<string> split(const string &s, char delim) {
 
 template <typename T>
 string vtos(const vector<T> &vec) {
-  if (vec.empty) return "{}";
+  if (vec.empty()) return "{}";
   ostringstream oss;
-  // Convert all but the last element to avoid a trailing ","
   copy(vec.begin(), vec.end() - 1, ostream_iterator<int>(oss, ","));
-  // Now add the last element with no delimiter
   oss << vec.back();
   return oss.str();
+}
+
+template <typename T, size_t N>
+string vtos(const T (&arr)[N]) {
+  if (N == 0) return "[]";
+  ostringstream oss;
+  copy(arr, arr + N - 1, ostream_iterator<int>(oss, ","));
+  oss << arr[N - 1];
+  return oss.str();
+}
+
+template <typename T, size_t N>
+T choice(T (&arr)[N]) {
+  uniform_int_distribution<int> uni(0, N - 1);
+  return arr[uni(gen)];
 }
 
 // int main() {
