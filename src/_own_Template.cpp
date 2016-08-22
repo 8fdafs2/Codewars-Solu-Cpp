@@ -2,6 +2,7 @@
 
 */
 
+#include "common.cpp"
 #include <algorithm>
 #include <cassert>
 #include <chrono>
@@ -18,17 +19,16 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "common.cpp"
 
 using namespace std;
 
 class Solution {
- public:
+public:
   static string subsol_01(int input) { return to_string(input); };
 };
 
 class TestCase {
- public:
+public:
   int input;
   string expected;
   TestCase(int input_, const string &expected_)
@@ -72,7 +72,8 @@ unsigned long test_spd(const function<string(int)> &subsol,
     const TestCase &testcase = testcases[i];
     unsigned int n = n_;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
-    while (n--) subsol(testcase.input);
+    while (n--)
+      subsol(testcase.input);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     elapsed += duration_cast<milliseconds>(t2 - t1).count();
   }

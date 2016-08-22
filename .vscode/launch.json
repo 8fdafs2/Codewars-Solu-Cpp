@@ -1,0 +1,49 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C++ Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "targetArchitecture": "x86",
+      "program": "${file}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceRoot}",
+      "environment": [],
+      "externalConsole": true,
+      "miDebuggerPath":"C:/mingw-w64/x86_64-6.1.0-posix-seh-rt_v5-rev0/mingw64/bin/gdb.exe",
+      "linux": {
+        "MIMode": "gdb"
+      },
+      "osx": {
+        "MIMode": "lldb"
+      },
+      "windows": {
+        "MIMode": "gdb"
+      }
+    },
+    {
+      "name": "C++ Attach",
+      "type": "cppdbg",
+      "request": "launch",
+      "targetArchitecture": "x64",
+      "program": "enter program name, for example ${workspaceRoot}/a.out",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceRoot}",
+      "environment": [],
+      "processId": "${command.pickProcess}",
+      "externalConsole": false,
+      "linux": {
+        "MIMode": "gdb"
+      },
+      "osx": {
+        "MIMode": "lldb"
+      },
+      "windows": {
+        "MIMode": "gdb"
+      }
+    }
+  ]
+}

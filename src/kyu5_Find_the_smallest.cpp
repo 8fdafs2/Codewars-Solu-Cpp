@@ -33,6 +33,7 @@ index 1 which gave 029917 which is the number 29917.
 smallest(1000000) --> [1, 0, 6]
 */
 
+#include "common.cpp"
 #include <algorithm>
 #include <cassert>
 #include <chrono>
@@ -49,12 +50,11 @@ smallest(1000000) --> [1, 0, 6]
 #include <sstream>
 #include <string>
 #include <vector>
-#include "common.cpp"
 
 using namespace std;
 
 class Solution {
- public:
+public:
   static vector<long long> smallest_01(long long n) {
     string n_str{to_string(n)};
     long long l = n_str.size();
@@ -63,13 +63,16 @@ class Solution {
       if (i > 0 && i < l) {
         bool tocontinue = true;
         for (long long k = i; k >= 0; --k)
-          if (n_str[k] > d) tocontinue = false;
-        if (tocontinue) continue;
+          if (n_str[k] > d)
+            tocontinue = false;
+        if (tocontinue)
+          continue;
         for (long long j = 0; j < i; ++j) {
-          if (n_str[j] >= d) {  // i != j
+          if (n_str[j] >= d) { // i != j
             // i < j
             long long i_{i};
-            while (n_str[i_ - 1] == d) --i_;
+            while (n_str[i_ - 1] == d)
+              --i_;
             n_str.erase(i_, 1);
             n_str.insert(j, 1, d);
             vector<long long> ret_01{stoll(n_str), i_, j};
@@ -82,13 +85,17 @@ class Solution {
             // i > j
             for (i = j, d = n_str[i], j = i + 1; j < l && n_str[j] <= d; ++j)
               ;
-            while (n_str[j - 1] == d) --j;
+            while (n_str[j - 1] == d)
+              --j;
             n_str.erase(i, 1);
             n_str.insert(j - 1, 1, d);
             vector<long long> ret_02{stoll(n_str), i, j - 1};
-            if (ret_01[0] < ret_02[0]) return ret_01;
-            if (ret_01[0] > ret_02[0]) return ret_02;
-            if (ret_01[1] < ret_02[1]) return ret_01;
+            if (ret_01[0] < ret_02[0])
+              return ret_01;
+            if (ret_01[0] > ret_02[0])
+              return ret_02;
+            if (ret_01[1] < ret_02[1])
+              return ret_01;
             return ret_02;
           }
         }
@@ -118,7 +125,7 @@ class Solution {
 };
 
 class TestCase {
- public:
+public:
   const long long n;
   const vector<long long> expected;
   TestCase(long long n_, const vector<long long> &expected_)
@@ -127,8 +134,8 @@ class TestCase {
   }
 };
 
-const vector<TestCase> set_gen(
-    const function<vector<long long>(long long)> &smallest) {
+const vector<TestCase>
+set_gen(const function<vector<long long>(long long)> &smallest) {
   vector<TestCase> testcases;
   uniform_int_distribution<long long> uni1(10000000, 100000000);
   for (int i = 0; i < 100; ++i) {
@@ -164,7 +171,8 @@ unsigned long test_spd(const function<vector<long long>(long long)> &smallest,
     const TestCase &testcase = testcases[i];
     unsigned int n = n_;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
-    while (n--) smallest(testcase.n);
+    while (n--)
+      smallest(testcase.n);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     elapsed += duration_cast<milliseconds>(t2 - t1).count();
   }

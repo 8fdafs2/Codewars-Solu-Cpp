@@ -64,24 +64,27 @@ If a or b are empty the result is evident by itself.
 using namespace std;
 
 class Solution {
- public:
+public:
   static bool comp_01(vector<int> a, vector<int> b) {
-    for (int i = 0; i < a.size(); i++) a[i] *= a[i];
+    for (int i = 0; i < a.size(); i++)
+      a[i] *= a[i];
     sort(a.begin(), a.end());
     sort(b.begin(), b.end());
     return a == b;
   };
   static bool comp_02(vector<int> a, vector<int> b) {
     unordered_set<int> st;
-    for (int i = 0; i < a.size(); i++) st.insert(a[i] * a[i]);
+    for (int i = 0; i < a.size(); i++)
+      st.insert(a[i] * a[i]);
     for (int i = 0; i < b.size(); i++)
-      if (st.find(b[i]) == st.end()) return false;
+      if (st.find(b[i]) == st.end())
+        return false;
     return true;
   };
 };
 
 class TestCase {
- public:
+public:
   vector<int> a;
   vector<int> b;
   bool expected;
@@ -91,19 +94,22 @@ class TestCase {
   }
 };
 
-const vector<TestCase> set_gen(
-    const function<bool(vector<int>, vector<int>)> &comp) {
+const vector<TestCase>
+set_gen(const function<bool(vector<int>, vector<int>)> &comp) {
   vector<TestCase> testcases;
   srand(time(0));
   for (int i = 0; i < 100; i++) {
     int l = rand() % 10 + 10;
     vector<int> a(l);
     vector<int> b(l);
-    for (int j = 0; j < l; j++) a[j] = rand() % 100;
+    for (int j = 0; j < l; j++)
+      a[j] = rand() % 100;
     if (rand() % 2) {
-      for (int j = 0; j < l; j++) b[j] = rand() % 100;
+      for (int j = 0; j < l; j++)
+        b[j] = rand() % 100;
     } else {
-      for (int j = 0; j < l; j++) b[j] = a[j] * a[j];
+      for (int j = 0; j < l; j++)
+        b[j] = a[j] * a[j];
     }
     bool expected = comp(a, b);
     testcases.push_back(TestCase(a, b, expected));
@@ -128,7 +134,8 @@ unsigned long test_spd(const function<bool(vector<int>, vector<int>)> &comp,
     const TestCase &testcase = testcases[i];
     unsigned int n = n_;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
-    while (n--) comp(testcase.a, testcase.b);
+    while (n--)
+      comp(testcase.a, testcase.b);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     elapsed += duration_cast<milliseconds>(t2 - t1).count();
   }

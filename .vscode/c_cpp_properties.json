@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": ["/usr/include"],
+            "browse" : {
+                "limitSymbolsToIncludedHeaders" : true,
+                "databaseFilename" : ""
+            }
+        },
+        {
+            "name": "Linux",
+            "includePath": ["/usr/include"],
+            "browse" : {
+                "limitSymbolsToIncludedHeaders" : true,
+                "databaseFilename" : ""
+            }
+        },
+        {
+            "name": "Win32",
+            "includePath": ["C:/mingw-w64/x86_64-6.1.0-posix-seh-rt_v5-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/6.1.0/include"],
+            "browse" : {
+                "limitSymbolsToIncludedHeaders" : true,
+                "databaseFilename" : ""
+            }
+        }
+    ],
+    "clang_format" : {
+        "style" : "file",
+        "fallback-style" : "LLVM",
+        "sort-includes" : false
+    }
+}
