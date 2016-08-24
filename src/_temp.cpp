@@ -1,37 +1,30 @@
 #include <cmath>
-#include <iostream>
-#include <vector>
-
-typedef unsigned long long ull;
 
 using namespace std;
+typedef long long ll;
 
-class ProdFib {
+class BackWardsPrime {
  public:
-  static vector<ull> productFib(ull prod);
+  static string backwardsPrime(ll start, ll end);
 };
 
-vector<ull> ProdFib::productFib(ull prod) {
-  double gr = (1 + sqrt(5)) / 2;
-  int n = round((log(5 * prod) / log(gr) - 1) / 2);
-  ull fn = round(pow(gr, n) / sqrt(5));
-  ull fn1 = round(fn * gr);
-  while (fn * fn1 < prod) {
-    fn = fn1;
-    fn1 = round(fn * gr);
-  }
-  return {fn, fn1, fn * fn1 == prod};
+bool is_prime(ll n) {
+  if (n == 2) return true;
+  if (n % 2 == 0) return false;
+  int root = sqrt(n);
+  for (int i = 3; i < root + 1; i += 2)
+    if ((n % i) == 0) return false;
+  return true;
 }
 
-main() {
-  ProdFib pf;
-  vector<ull> r;
-  r = pf.productFib(4895);
-  cout << r[0] << '|' << r[1] << '|' << r[2] << endl;  // {55, 89, true}
-  r = pf.productFib(5895);
-  cout << r[0] << '|' << r[1] << '|' << r[2] << endl;  // {89, 144, false}
-  r = pf.productFib(74049690);
-  cout << r[0] << '|' << r[1] << '|' << r[2] << endl;  // {6765, 10946, 1ULL}
-  r = pf.productFib(84049690);
-  cout << r[0] << '|' << r[1] << '|' << r[2] << endl;  // {10946, 17711, 0ULL}
+string BackWardsPrime::backwardsPrime(ll start, ll end) {
+  string ret;
+  for (ll i = start; i <= end; ++i) {
+    string i_str = to_string(i);
+    reverse(i_str.begin(), i_str.end());
+    ll i_reversed = stoll(i_str);
+    if (i != i_reversed && is_prime(i) && is_prime(i_reversed))
+      ret += to_string(i) + " ";
+  }
+  return ret.substr(0, ret.size() - 2);
 }
