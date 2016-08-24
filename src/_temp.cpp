@@ -1,35 +1,37 @@
 #include <cmath>
-#include <unordered_map>
+#include <iostream>
 #include <vector>
+
+typedef unsigned long long ull;
 
 using namespace std;
 
-typedef unordered_map<string, double> stringdblmap;
-class Tour {
-public:
-  static int tour(const vector<string> &fs, const vector<vector<string>> &ts,
-                  const stringdblmap &h);
+class ProdFib {
+ public:
+  static vector<ull> productFib(ull prod);
 };
 
-int Tour::tour(const vector<string> &fs, const vector<vector<string>> &ts,
-               const stringdblmap &h) {
-  vector<string> ts_;
-  for (auto &f : fs)
-    for (auto &t : ts)
-      if (f == t[0])
-        ts_.push_back(t[1]);
-  if (ts_.size() == 0)
-    return 0;
-  vector<int> ds;
-  for (auto &t : ts_) {
-    auto t = h.find(t);
-    if (t != h.end())
-      ds.push_back(t->second);
+vector<ull> ProdFib::productFib(ull prod) {
+  double gr = (1 + sqrt(5)) / 2;
+  int n = round((log(5 * prod) / log(gr) - 1) / 2);
+  ull fn = round(pow(gr, n) / sqrt(5));
+  ull fn1 = round(fn * gr);
+  while (fn * fn1 < prod) {
+    fn = fn1;
+    fn1 = round(fn * gr);
   }
-  if (ds.size() == 0)
-    return 0;
-  double ret = ds[0];
-  for (int i = 1; i < ds.size(); ++i)
-    ret += sqrt(ds[i] * ds[i] - ds[i - 1] * ds[i - 1]);
-  return floor(ret + ds[ds.size() - 1]);
+  return {fn, fn1, fn * fn1 == prod};
+}
+
+main() {
+  ProdFib pf;
+  vector<ull> r;
+  r = pf.productFib(4895);
+  cout << r[0] << '|' << r[1] << '|' << r[2] << endl;  // {55, 89, true}
+  r = pf.productFib(5895);
+  cout << r[0] << '|' << r[1] << '|' << r[2] << endl;  // {89, 144, false}
+  r = pf.productFib(74049690);
+  cout << r[0] << '|' << r[1] << '|' << r[2] << endl;  // {6765, 10946, 1ULL}
+  r = pf.productFib(84049690);
+  cout << r[0] << '|' << r[1] << '|' << r[2] << endl;  // {10946, 17711, 0ULL}
 }
