@@ -1,30 +1,37 @@
 #include <cmath>
+#include <iostream>
+#include <string>
 
 using namespace std;
-typedef long long ll;
 
-class BackWardsPrime {
+class MaxRotate {
  public:
-  static string backwardsPrime(ll start, ll end);
+  static long long maxRot(long long n);
 };
 
-bool is_prime(ll n) {
-  if (n == 2) return true;
-  if (n % 2 == 0) return false;
-  int root = sqrt(n);
-  for (int i = 3; i < root + 1; i += 2)
-    if ((n % i) == 0) return false;
-  return true;
+long long MaxRotate::maxRot(long long n) {
+  string n_str = to_string(n);
+  size_t l = n_str.size();
+  long long base0 = pow(10, l);
+  long long base1 = 10;
+  long long ret(n);
+  for (size_t i = 1; i < l; ++i) {
+    long long n_ = n / base0 * base0;
+    n = n % base0;
+    base0 /= 10;
+    n = n_ + n % base0 * 10 + n / base0;
+    if (ret < n) ret = n;
+  }
+  return ret;
 }
 
-string BackWardsPrime::backwardsPrime(ll start, ll end) {
-  string ret;
-  for (ll i = start; i <= end; ++i) {
-    string i_str = to_string(i);
-    reverse(i_str.begin(), i_str.end());
-    ll i_reversed = stoll(i_str);
-    if (i != i_reversed && is_prime(i) && is_prime(i_reversed))
-      ret += to_string(i) + " ";
-  }
-  return ret.substr(0, ret.size() - 2);
+void dotest(long long n, long long expected) {
+  cout << MaxRotate::maxRot(n) << " | " << expected << endl;
+}
+
+int main() {
+  dotest(56789, 0);
+  // dotest(195881031, 988103115);
+  // dotest(896219342, 962193428);
+  // dotest(69418307, 94183076);
 }

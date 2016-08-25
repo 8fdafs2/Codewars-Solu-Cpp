@@ -68,7 +68,7 @@ uint64_t test_spd(const function<string(int32_t)> &subsol,
                   const vector<TestCase> &testcases, uint32_t n_ = 1000) {
   using namespace chrono;
   uint64_t elapsed = 0;
-  for (int i = 0; i < testcases.size(); ++i) {
+  for (size_t i = 0; i < testcases.size(); ++i) {
     const TestCase &testcase = testcases[i];
     uint32_t n = n_;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
