@@ -2,3 +2,4 @@
 .vscode/
 *.o
 *.out
+src/_temp.cpp
